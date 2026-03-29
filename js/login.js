@@ -40,6 +40,7 @@ loginForm.addEventListener('submit', (e) => {
 
         // Mock authentication or localStorage authentication
         if ((emailInput.value === 'admin@moviespace.com' && passwordInput.value === 'password') || validUser) {
+            localStorage.setItem('loggedInUser', emailInput.value); // Store logged in user
             window.location.href = 'pages/films.html';
         } else {
             passwordError.textContent = 'Invalid email or password!';
