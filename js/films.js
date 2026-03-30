@@ -18,6 +18,7 @@ let allMovies = [];
 
 const movieListContainer = document.getElementById('movie-list');
 const paginationInfo = document.getElementById('pagination-info');
+const totalFilms = document.getElementById('total-films');
 const prevPageBtn = document.getElementById('prev-page');
 const nextPageBtn = document.getElementById('next-page');
 const loginButton = document.getElementById('login-button');
@@ -58,7 +59,8 @@ const fetchMovies = async (page) => {
 
 const renderMovies = () => {
     movieListContainer.innerHTML = '';
-    
+    totalFilms.textContent = `All Films (${totalMovies.toLocaleString('id-ID')})`;
+
     allMovies.forEach((movie) => {
         // Find human readable names for genres
         const genresHtml = (movie.genre_ids || [])
