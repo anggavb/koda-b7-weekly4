@@ -74,13 +74,13 @@ const renderMovies = () => {
         const card = document.createElement('div');
         card.className = 'movie-card flex flex-col md:flex-row gap-8 items-start group animation-fade-in';
         card.innerHTML = `
-            <div class="w-full md:w-48 flex-shrink-0">
-                <div class="w-full aspect-[2/3] bg-vintage rounded-lg flex items-center justify-center text-main font-bold relative overflow-hidden shadow-lg shadow-black/50">
+            <div class="w-full md:w-48 shrink-0">
+                <div class="w-full aspect-2/3 bg-vintage rounded-lg flex items-center justify-center text-main font-bold relative overflow-hidden shadow-lg shadow-black/50">
                     <img src="${posterUrl}" alt="${movie.title} Poster" class="w-full h-full object-cover">
                 </div>
             </div>
             
-            <div class="flex-grow flex flex-col pt-2 max-w-2xl h-full">
+            <div class="flex grow flex-col pt-2 max-w-2xl h-full">
                 <div class="mb-3">
                     <h2 class="text-2xl font-bold font-heading text-ivory mb-2">${movie.title}</h2>
                     <div class="flex flex-wrap items-center gap-2 mb-2">
@@ -97,12 +97,22 @@ const renderMovies = () => {
                 </p>
                 
                 <div class="flex flex-wrap gap-4 mt-auto">
-                    <button class="bg-ivory text-main px-6 py-2 rounded-full font-bold text-sm tracking-wide hover:bg-white uppercase">View Details</button>
+                    <button class="bg-ivory text-main px-6 py-2 rounded-full font-bold text-sm tracking-wide hover:bg-white uppercase" id="view-details-${movie.id}">View Details</button>
                     <button class="btn-watchlist bg-transparent border border-ivory text-ivory px-6 py-2 rounded-full font-bold text-sm tracking-wide hover:bg-ivory hover:text-main uppercase">Add to Watchlists</button>
                 </div>
             </div>
         `;
         movieListContainer.appendChild(card);
+    });
+
+    // Add event listeners for "View Details" buttons
+    allMovies.forEach(movie => {
+        const detailsBtn = document.getElementById(`view-details-${movie.id}`);
+        if (detailsBtn) {
+            detailsBtn.addEventListener('click', () => {
+                window.location.href = `details.html?movie_id=${movie.id}`;
+            });
+        }
     });
 
     // Add to watchlist event listeners
