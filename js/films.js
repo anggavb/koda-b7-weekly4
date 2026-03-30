@@ -20,6 +20,8 @@ const movieListContainer = document.getElementById('movie-list');
 const paginationInfo = document.getElementById('pagination-info');
 const prevPageBtn = document.getElementById('prev-page');
 const nextPageBtn = document.getElementById('next-page');
+const loginButton = document.getElementById('login-button');
+const userProfile = document.getElementById('user-profile');
 
 // Fetch genres once to map integer IDs to full strings
 const fetchGenres = async () => {
@@ -145,6 +147,16 @@ const updatePagination = () => {
 };
 
 // Initialize
+const loggedInUser = localStorage.getItem('loggedInUser');
+if (loggedInUser) {
+    loginButton.classList.add('hidden');
+    userProfile.classList.remove('hidden');
+    userProfile.textContent = loggedInUser === 'admin@moviespace.com' ? 'AD' : loggedInUser.charAt(0).toUpperCase();
+} else {
+    loginButton.classList.remove('hidden');
+    userProfile.classList.add('hidden');
+}
+
 fetchGenres();
 fetchMovies(currentPage);
 
