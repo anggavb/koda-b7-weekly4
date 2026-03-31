@@ -23,6 +23,7 @@ const prevPageBtn = document.getElementById('prev-page');
 const nextPageBtn = document.getElementById('next-page');
 const loginButton = document.getElementById('login-button');
 const userProfile = document.getElementById('user-profile');
+const genreSelect = document.getElementById('genre-select');
 
 // Fetch genres once to map integer IDs to full strings
 const fetchGenres = async () => {
@@ -31,6 +32,7 @@ const fetchGenres = async () => {
         const data = await res.json();
         data.genres.forEach(g => {
             currentGenres[g.id] = g.name;
+            genreSelect.innerHTML += `<option value="${g.id}">${g.name}</option>`;
         });
 
         console.log(currentGenres);
@@ -54,6 +56,23 @@ const fetchMovies = async (page) => {
         updatePagination();
     } catch (e) {
         console.error("Failed to load movies", e);
+    }
+};
+
+const fetchMoviesByGenre = async (genreId, page) => {
+    try {
+        const res = await fetch(`${TMDB_API_BASE_URL}/discover/movie?language=en-US&page=${page}&with_genres=${genreId}`, options);
+        const data = await res.json();
+        console.log(data);
+        
+        allMovies = data.results;
+        totalPages = data.total_pages
+        totalMovies = data.total_results;
+        
+        renderMovies();
+        updatePagination();
+    } catch (e) {
+        console.error("Failed to load movies by genre", e);
     }
 };
 
@@ -172,10 +191,25 @@ if (loggedInUser) {
 fetchGenres();
 fetchMovies(currentPage);
 
+genreSelect.addEventListener('change', () => {
+    const selectedGenre = genreSelect.value;
+    currentPage = 1; // Reset to first page when changing genre
+
+    if (selectedGenre) {
+        fetchMoviesByGenre(selectedGenre, currentPage);
+    } else {
+        fetchMovies(currentPage);
+    }
+});
+
 prevPageBtn.addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
-        fetchMovies(currentPage);
+        if (genreSelect.value) {
+            fetchMoviesByGenre(genreSelect.value, currentPage);
+        } else {
+            fetchMovies(currentPage);
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });
@@ -183,7 +217,11 @@ prevPageBtn.addEventListener('click', () => {
 nextPageBtn.addEventListener('click', () => {
     if (currentPage < totalPages) {
         currentPage++;
-        fetchMovies(currentPage);
+        if (genreSelect.value) {
+            fetchMoviesByGenre(genreSelect.value, currentPage);
+        } else {
+            fetchMovies(currentPage);
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });
